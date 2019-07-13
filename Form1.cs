@@ -248,6 +248,34 @@ namespace Deafk
             keyDown(0x0D);
             keyUP(0x0D);
         }
+
+        private void Timer5_Tick(object sender, EventArgs e)
+        {
+            if (!launched)
+                return;
+
+            if(voicekeymode == 0)
+            {
+                if(GetAsyncKeyState(keyvoice) != 0)
+                {
+                    keyDown(0x58);
+                    playSound("./wt.wav");
+                    while (GetAsyncKeyState(keyvoice) != 0) ; ;
+                    keyUP(0x58);
+                }
+            }
+            else
+            {
+                updateJoyState(0);
+                if(getJoyBtn(0, voicejoykey) > 0)
+                {
+                    keyDown(0x58);
+                    playSound("./wt.wav");
+                    while (getJoyBtn(0, voicejoykey) > 0) ; ;
+                    keyUP(0x58);
+                }
+            }
+        }
     }
 
     public class INIManager

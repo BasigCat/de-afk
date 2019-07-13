@@ -247,6 +247,8 @@ namespace Deafk
 
             keyDown(0x0D);
             keyUP(0x0D);
+
+            playSound("./beep.wav");
         }
 
         private void Timer5_Tick(object sender, EventArgs e)
@@ -273,6 +275,28 @@ namespace Deafk
                     playSound("./wt.wav");
                     while (getJoyBtn(0, voicejoykey) > 0) ; ;
                     keyUP(0x58);
+                }
+            }
+        }
+
+        private void Timer6_Tick(object sender, EventArgs e)
+        {
+            if (!launched)
+                return;
+
+            if (GetAsyncKeyState(activationKey) != 0)
+            {
+                if (active == 0)
+                {
+                    active = 1;
+                    playSound("./activation.wav");
+                    timer3.Enabled = true;
+                }
+                else
+                {
+                    active = 0;
+                    playSound("./deactivation.wav");
+                    timer3.Enabled = false;
                 }
             }
         }

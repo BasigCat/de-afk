@@ -244,7 +244,7 @@
             // 
             // timer3
             // 
-            this.timer3.Interval = 540000;
+            this.timer3.Interval = 180000;
             this.timer3.Tick += new System.EventHandler(this.Timer3_Tick);
             // 
             // timer4

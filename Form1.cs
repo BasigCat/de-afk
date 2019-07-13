@@ -21,6 +21,12 @@ namespace Deafk
         public static extern int updateJoyState(int Joy);
         [DllImport("jinput.dll", CharSet = CharSet.Unicode)]
         public static extern int getJoyBtn(int Joy, int Btn);
+        [DllImport("jinput.dll", CharSet = CharSet.Unicode)]
+        public static extern double getJoyX(int Joy);
+        [DllImport("jinput.dll", CharSet = CharSet.Unicode)]
+        public static extern double getJoyY(int Joy);
+        [DllImport("jinput.dll", CharSet = CharSet.Unicode)]
+        public static extern double getJoyZ(int Joy);
 
         [DllImport("user32.dll", SetLastError = true)]
         public static extern int GetKeyState(int vKey);
@@ -183,6 +189,11 @@ namespace Deafk
                     }
                 }
 
+                updateJoyState(0);
+                if (getJoyY(0) > 0.1) active = 1;
+                if (getJoyX(0) > 0.1) active = 1;
+                if (getJoyZ(0) > 0.1) active = 1;
+
                 if (active == 1)
                     timer3.Enabled = true;
                 else
@@ -299,6 +310,7 @@ namespace Deafk
                     playSound("./wt.wav");
                     while (true)
                     {
+                        updateJoyState(0);
                         if (getJoyBtn(0, voicejoykey) == 0) break;
                     }
                     keyUP(0x58);

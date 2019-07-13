@@ -118,11 +118,11 @@ namespace Deafk
 
             updateJoyState(0);
 
-            for(int i = 0; i != 32; i++)
+            for(int i = 1; i != 32; i++)
             {
-                if(getJoyBtn(0, i) != 0)
+                if(getJoyBtn(0, i) > 0)
                 {
-                    textBox3.Text = "Joy_" + i;
+                    textBox3.Text = "Joy_" + i.ToString();
                     voicejoykey = i;
                     voicekeymode = 1; //joyKeyMode
                     break;

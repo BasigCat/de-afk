@@ -220,7 +220,7 @@
             this.textBox3.ReadOnly = true;
             this.textBox3.Size = new System.Drawing.Size(151, 19);
             this.textBox3.TabIndex = 11;
-            this.textBox3.Text = "X";
+            this.textBox3.Text = "Y";
             this.textBox3.Click += new System.EventHandler(this.TextBox3_Click);
             this.textBox3.Enter += new System.EventHandler(this.TextBox3_Enter);
             this.textBox3.KeyUp += new System.Windows.Forms.KeyEventHandler(this.TextBox3_KeyUp);
@@ -239,12 +239,12 @@
             // 
             // timer2
             // 
-            this.timer2.Interval = 780000;
+            this.timer2.Interval = 120000;
             this.timer2.Tick += new System.EventHandler(this.Timer2_Tick);
             // 
             // timer3
             // 
-            this.timer3.Interval = 840000;
+            this.timer3.Interval = 540000;
             this.timer3.Tick += new System.EventHandler(this.Timer3_Tick);
             // 
             // timer4
@@ -254,7 +254,6 @@
             // 
             // timer5
             // 
-            this.timer5.Enabled = true;
             this.timer5.Tick += new System.EventHandler(this.Timer5_Tick);
             // 
             // timer6

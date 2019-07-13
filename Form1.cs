@@ -23,17 +23,20 @@ namespace Deafk
         public static extern int getJoyBtn(int Joy, int Btn);
 
         [DllImport("user32.dll", SetLastError = true)]
-        public static extern int GetAsyncKeyState(int vKey);
+        public static extern int GetKeyState(int vKey);
 
         [DllImport("user32.dll", SetLastError = true)]
         public static extern int FindWindow(string lpClassName, string lpWindowName);
 
         [DllImport("user32.dll", SetLastError = true)]
-        public static extern int keybd_event(byte bVk, byte bScan, UInt32 dwFlags, int dwExtraInfo);
+        public static extern int keybd_event(int bVk, int bScan, UInt32 dwFlags, int dwExtraInfo);
+
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        private static extern short VkKeyScan(char ch);
 
         /*Manually params*/
         int joystics;
-        int keyvoice;
+        int keyvoice = 69;
         int activationKey;
         int voicekeymode = 0; //default 0 - keyboard
         int voicejoykey;
@@ -57,12 +60,19 @@ namespace Deafk
             textBox1.Text = cfg.GetPrivateString("interface", "SZactivationKey");
             textBox3.Text = cfg.GetPrivateString("interface", "SZkeyVoice");
             textBox2.Text = cfg.GetPrivateString("interface", "SZtext");
+
+            timer5.Enabled = true;
         }
 
         private void playSound(string path)
         {
             SoundPlayer sound = new SoundPlayer(path);
             sound.Play();
+        }
+
+        private int getKey(int key)
+        {
+            return GetKeyState(key) & 0x8000;
         }
 
         private void Label1_MouseDown(object sender, MouseEventArgs e)
@@ -166,7 +176,7 @@ namespace Deafk
             {
                 for (int i = 0x1; i != 0x0FE; i++)
                 {
-                    if (GetAsyncKeyState(i) != 0)
+                    if (getKey(i) != 0)
                     {
                         active = 1;
                         break;
@@ -221,14 +231,25 @@ namespace Deafk
             cfg.WritePrivateString("interface", "SZtext", textBox2.Text);
         }
 
-        private void keyUP(byte key)
+        private void keyUP(int key)
         {
             keybd_event(key, 0, 2, 0);
         }
 
-        private void keyDown(byte key)
+        private void keyDown(int key)
         {
             keybd_event(key, 0, 0, 0);
+        }
+
+        public static Keys ConvertCharToVirtualKey(char ch)
+        {
+            short vkey = VkKeyScan(ch);
+            Keys retval = (Keys)(vkey & 0xff);
+            int modifiers = vkey >> 8;
+            if ((modifiers & 1) != 0) retval |= Keys.Shift;
+            if ((modifiers & 2) != 0) retval |= Keys.Control;
+            if ((modifiers & 4) != 0) retval |= Keys.Alt;
+            return retval;
         }
 
         private void Timer3_Tick(object sender, EventArgs e)
@@ -241,8 +262,8 @@ namespace Deafk
 
             for(int i = 0; i != textBox2.Text.Length; i++)
             {
-                keyDown(byte.Parse(textBox1.Text[i].ToString()));
-                keyUP(byte.Parse(textBox1.Text[i].ToString()));
+                keyDown((int)ConvertCharToVirtualKey(textBox2.Text[i]));
+                keyUP((int)ConvertCharToVirtualKey(textBox2.Text[i]));
             }
 
             keyDown(0x0D);
@@ -258,11 +279,14 @@ namespace Deafk
 
             if(voicekeymode == 0)
             {
-                if(GetAsyncKeyState(keyvoice) != 0)
+                if(getKey(keyvoice) != 0)
                 {
                     keyDown(0x58);
                     playSound("./wt.wav");
-                    while (GetAsyncKeyState(keyvoice) != 0) ; ;
+                    while (true)
+                    {
+                        if (getKey(keyvoice) == 0) break;
+                    }
                     keyUP(0x58);
                 }
             }
@@ -273,7 +297,10 @@ namespace Deafk
                 {
                     keyDown(0x58);
                     playSound("./wt.wav");
-                    while (getJoyBtn(0, voicejoykey) > 0) ; ;
+                    while (true)
+                    {
+                        if (getJoyBtn(0, voicejoykey) == 0) break;
+                    }
                     keyUP(0x58);
                 }
             }
@@ -284,7 +311,7 @@ namespace Deafk
             if (!launched)
                 return;
 
-            if (GetAsyncKeyState(activationKey) != 0)
+            if (getKey(activationKey) != 0)
             {
                 if (active == 0)
                 {

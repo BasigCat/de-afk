@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using System.Media
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -39,6 +40,12 @@ namespace Deafk
         {
             InitializeComponent();
             joystics = init();
+        }
+
+        private void playSound(string path)
+        {
+            SoundPlayer sound = new SoundPlayer(path);
+            sound.Play();
         }
 
         private void Label1_MouseDown(object sender, MouseEventArgs e)

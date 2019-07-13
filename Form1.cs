@@ -20,12 +20,16 @@ namespace Deafk
         [DllImport("jinput.dll", CharSet = CharSet.Unicode)]
         public static extern int getJoyBtn(int Joy, int Btn);
 
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern int GetAsyncKeyState(int vKey);
+
         /*Manually params*/
         int joystics;
         Keys keyvoice;
         Keys activationKey;
         int voicekeymode = 0; //default 0 - keyboard
         int voicejoykey;
+        int active = 0;
 
         public Form1()
         {
@@ -63,6 +67,10 @@ namespace Deafk
 
         private void CheckBox1_CheckedChanged(object sender, EventArgs e)
         {
+            if(checkBox1.Checked == true)
+                timer2.Enabled = true;
+            else
+                timer2.Enabled = false;
         }
 
         private void Button5_Click(object sender, EventArgs e)
@@ -122,6 +130,23 @@ namespace Deafk
         {
             textBox1.Text = e.KeyData.ToString();
             activationKey = e.KeyData;
+        }
+
+        private void Timer2_Tick(object sender, EventArgs e)
+        {
+            for(int i = 0x1; i != 0x0FE; i++)
+            {
+                if (GetAsyncKeyState(i) != 0)
+                {
+                    active = 1;
+                    break;
+                }
+            }
+
+            if(active == 1)
+                timer3.Enabled = true;
+            else
+                timer3.Enabled = false;
         }
     }
 }

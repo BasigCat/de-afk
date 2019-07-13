@@ -46,6 +46,8 @@
             this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.timer2 = new System.Windows.Forms.Timer(this.components);
+            this.timer3 = new System.Windows.Forms.Timer(this.components);
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -232,6 +234,15 @@
             // 
             this.timer1.Tick += new System.EventHandler(this.Timer1_Tick);
             // 
+            // timer2
+            // 
+            this.timer2.Interval = 780000;
+            this.timer2.Tick += new System.EventHandler(this.Timer2_Tick);
+            // 
+            // timer3
+            // 
+            this.timer3.Interval = 840000;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -276,6 +287,8 @@
         private System.Windows.Forms.NotifyIcon notifyIcon1;
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.Timer timer2;
+        private System.Windows.Forms.Timer timer3;
     }
 }
 

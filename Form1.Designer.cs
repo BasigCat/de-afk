@@ -51,6 +51,7 @@
             this.timer4 = new System.Windows.Forms.Timer(this.components);
             this.timer5 = new System.Windows.Forms.Timer(this.components);
             this.timer6 = new System.Windows.Forms.Timer(this.components);
+            this.timer7 = new System.Windows.Forms.Timer(this.components);
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -244,7 +245,7 @@
             // 
             // timer3
             // 
-            this.timer3.Interval = 180000;
+            this.timer3.Interval = 480000;
             this.timer3.Tick += new System.EventHandler(this.Timer3_Tick);
             // 
             // timer4
@@ -260,6 +261,12 @@
             // 
             this.timer6.Enabled = true;
             this.timer6.Tick += new System.EventHandler(this.Timer6_Tick);
+            // 
+            // timer7
+            // 
+            this.timer7.Enabled = true;
+            this.timer7.Interval = 60000;
+            this.timer7.Tick += new System.EventHandler(this.Timer7_Tick);
             // 
             // Form1
             // 
@@ -311,6 +318,7 @@
         private System.Windows.Forms.Timer timer4;
         private System.Windows.Forms.Timer timer5;
         private System.Windows.Forms.Timer timer6;
+        private System.Windows.Forms.Timer timer7;
     }
 }
 

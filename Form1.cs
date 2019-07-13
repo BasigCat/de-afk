@@ -194,7 +194,7 @@ namespace Deafk
                 if (getJoyX(0) > 0.1) active = 1;
                 if (getJoyZ(0) > 0.1) active = 1;
 
-                if (active == 1)
+                if (active == 0)
                     timer3.Enabled = true;
             }
         }
@@ -330,11 +330,37 @@ namespace Deafk
                     active = 1;
                     playSound("./activation.wav");
                     timer3.Enabled = true;
+
+                    keyDown(0x59);
+                    keyUP(0x59);
+
+                    for (int i = 0; i != textBox2.Text.Length; i++)
+                    {
+                        keyDown((int)ConvertCharToVirtualKey(textBox2.Text[i]));
+                        keyUP((int)ConvertCharToVirtualKey(textBox2.Text[i]));
+                    }
+
+                    keyDown(0x0D);
+                    keyUP(0x0D);
+
+                    playSound("./beep.wav");
                 }
                 else
                 {
                     active = 0;
                     playSound("./deactivation.wav");
+                    timer3.Enabled = false;
+                }
+            }
+        }
+
+        private void Timer7_Tick(object sender, EventArgs e)
+        {
+            if(checkBox1.Checked == true)
+            {
+                if (active == 1)
+                {
+                    active = 0;
                     timer3.Enabled = false;
                 }
             }

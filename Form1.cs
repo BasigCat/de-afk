@@ -196,8 +196,6 @@ namespace Deafk
 
                 if (active == 1)
                     timer3.Enabled = true;
-                else
-                    timer3.Enabled = false;
             }
         }
 
@@ -303,6 +301,8 @@ namespace Deafk
             }
             else
             {
+                if (timer1.Enabled == true) return;
+
                 updateJoyState(0);
                 if(getJoyBtn(0, voicejoykey) > 0)
                 {

@@ -12,6 +12,7 @@ using System.Windows.Forms;
 
 namespace Deafk
 {
+
     public partial class Form1 : Form
     {
         [DllImport("jinput.dll", CharSet = CharSet.Unicode)]
@@ -29,17 +30,30 @@ namespace Deafk
 
         /*Manually params*/
         int joystics;
-        Keys keyvoice;
-        Keys activationKey;
+        int keyvoice;
+        int activationKey;
         int voicekeymode = 0; //default 0 - keyboard
         int voicejoykey;
         int active = 0;
         bool launched = false;
 
+        INIManager cfg = new INIManager("./config.ini");
+
         public Form1()
         {
             InitializeComponent();
             joystics = init();
+
+            //loading params
+            keyvoice = Int32.Parse(cfg.GetPrivateString("data", "keyVoice"));
+            activationKey = Int32.Parse(cfg.GetPrivateString("data", "activationKey"));
+            voicekeymode = Int32.Parse(cfg.GetPrivateString("data", "voiceKeyMode"));
+            voicejoykey = Int32.Parse(cfg.GetPrivateString("data", "voiceJoyKey"));
+            checkBox1.Checked = bool.Parse(cfg.GetPrivateString("data", "autoStart"));
+
+            textBox1.Text = cfg.GetPrivateString("interface", "SZactivationKey");
+            textBox3.Text = cfg.GetPrivateString("interface", "SZkeyVoice");
+            textBox2.Text = cfg.GetPrivateString("interface", "SZtext");
         }
 
         private void playSound(string path)
@@ -133,14 +147,14 @@ namespace Deafk
         private void TextBox3_KeyUp(object sender, KeyEventArgs e)
         {
             textBox3.Text = e.KeyData.ToString();
-            keyvoice = e.KeyData;
+            keyvoice = e.KeyValue;
             voicekeymode = 0;
         }
 
         private void TextBox1_KeyUp(object sender, KeyEventArgs e)
         {
             textBox1.Text = e.KeyData.ToString();
-            activationKey = e.KeyData;
+            activationKey = e.KeyValue;
         }
 
         private void Timer2_Tick(object sender, EventArgs e)
@@ -190,5 +204,51 @@ namespace Deafk
                 }
             }
         }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            cfg.WritePrivateString("data", "keyVoice", keyvoice.ToString());
+            cfg.WritePrivateString("data", "activationKey", activationKey.ToString());
+            cfg.WritePrivateString("data", "voiceKeyMode", voicekeymode.ToString());
+            cfg.WritePrivateString("data", "voiceJoyKey", voicejoykey.ToString());
+            cfg.WritePrivateString("data", "autoStart", checkBox1.Checked.ToString());
+
+            cfg.WritePrivateString("interface", "SZactivationKey", textBox1.Text);
+            cfg.WritePrivateString("interface", "SZkeyVoice", textBox3.Text);
+            cfg.WritePrivateString("interface", "SZtext", textBox2.Text);
+        }
+    }
+
+    public class INIManager
+    {
+        public INIManager(string aPath)
+        {
+            path = aPath;
+        }
+
+        public INIManager() : this("") { }
+
+        public string GetPrivateString(string aSection, string aKey)
+        {
+            StringBuilder buffer = new StringBuilder(SIZE);
+            GetPrivateString(aSection, aKey, null, buffer, SIZE, path);
+            return buffer.ToString();
+        }
+
+        public void WritePrivateString(string aSection, string aKey, string aValue)
+        {
+            WritePrivateString(aSection, aKey, aValue, path);
+        }
+
+        public string Path { get { return path; } set { path = value; } }
+
+        private const int SIZE = 1024;
+        private string path = null;
+
+        [DllImport("kernel32.dll", EntryPoint = "GetPrivateProfileString")]
+        private static extern int GetPrivateString(string section, string key, string def, StringBuilder buffer, int size, string path);
+
+        [DllImport("kernel32.dll", EntryPoint = "WritePrivateProfileString")]
+        private static extern int WritePrivateString(string section, string key, string str, string path);
     }
 }

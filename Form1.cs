@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using System.Media
+using System.Media;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -25,7 +25,7 @@ namespace Deafk
         public static extern int GetAsyncKeyState(int vKey);
 
         [DllImport("user32.dll", SetLastError = true)]
-        public static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
+        public static extern int FindWindow(string lpClassName, string lpWindowName);
 
         /*Manually params*/
         int joystics;
@@ -165,19 +165,29 @@ namespace Deafk
 
         private void Timer4_Tick(object sender, EventArgs e)
         {
-            IntPtr hWnd = FindWindow(null, "Euro Truck Simulator 2 Multiplayer");
+            int hWnd = FindWindow(null, "Euro Truck Simulator 2 Multiplayer");
 
-            if(hWnd == null)
+            if(hWnd == 0)
             {
                 label5.Text = "ETS2 не запущен.";
                 label5.ForeColor = System.Drawing.Color.FromArgb(0x00ff8c9f);
-                launched = false;
+
+                if(launched != false)
+                {
+                    playSound("./etsc.mp3");
+                    launched = false;
+                }
             }
             else
             {
                 label5.Text = "ETS2 запущен.";
                 label5.ForeColor = System.Drawing.Color.FromArgb(0x0092fc8b);
-                launched = true;
+
+                if (launched != true)
+                {
+                    playSound("./etso.wav");
+                    launched = true;
+                }
             }
         }
     }

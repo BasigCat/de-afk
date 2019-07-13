@@ -28,6 +28,9 @@ namespace Deafk
         [DllImport("user32.dll", SetLastError = true)]
         public static extern int FindWindow(string lpClassName, string lpWindowName);
 
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern int keybd_event(byte bVk, byte bScan, UInt32 dwFlags, int dwExtraInfo);
+
         /*Manually params*/
         int joystics;
         int keyvoice;
@@ -216,6 +219,34 @@ namespace Deafk
             cfg.WritePrivateString("interface", "SZactivationKey", textBox1.Text);
             cfg.WritePrivateString("interface", "SZkeyVoice", textBox3.Text);
             cfg.WritePrivateString("interface", "SZtext", textBox2.Text);
+        }
+
+        private void keyUP(byte key)
+        {
+            keybd_event(key, 0, 2, 0);
+        }
+
+        private void keyDown(byte key)
+        {
+            keybd_event(key, 0, 0, 0);
+        }
+
+        private void Timer3_Tick(object sender, EventArgs e)
+        {
+            if (!launched)
+                return;
+
+            keyDown(0x59);
+            keyUP(0x59);
+
+            for(int i = 0; i != textBox2.Text.Length; i++)
+            {
+                keyDown(byte.Parse(textBox1.Text[i].ToString()));
+                keyUP(byte.Parse(textBox1.Text[i].ToString()));
+            }
+
+            keyDown(0x0D);
+            keyUP(0x0D);
         }
     }
 

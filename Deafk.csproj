@@ -130,6 +130,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="ico.ico" />
+    <Content Include="jinput.dll" />
     <None Include="min_to_tray.png" />
   </ItemGroup>
   <ItemGroup>

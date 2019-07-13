@@ -174,7 +174,7 @@ namespace Deafk
 
                 if(launched != false)
                 {
-                    playSound("./etsc.mp3");
+                    playSound("./etsc.wav");
                     launched = false;
                 }
             }

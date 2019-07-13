@@ -23,6 +23,9 @@ namespace Deafk
         [DllImport("user32.dll", SetLastError = true)]
         public static extern int GetAsyncKeyState(int vKey);
 
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
+
         /*Manually params*/
         int joystics;
         Keys keyvoice;
@@ -30,6 +33,7 @@ namespace Deafk
         int voicekeymode = 0; //default 0 - keyboard
         int voicejoykey;
         int active = 0;
+        bool launched = false;
 
         public Form1()
         {
@@ -134,19 +138,40 @@ namespace Deafk
 
         private void Timer2_Tick(object sender, EventArgs e)
         {
-            for(int i = 0x1; i != 0x0FE; i++)
+            if (launched)
             {
-                if (GetAsyncKeyState(i) != 0)
+                for (int i = 0x1; i != 0x0FE; i++)
                 {
-                    active = 1;
-                    break;
+                    if (GetAsyncKeyState(i) != 0)
+                    {
+                        active = 1;
+                        break;
+                    }
                 }
-            }
 
-            if(active == 1)
-                timer3.Enabled = true;
+                if (active == 1)
+                    timer3.Enabled = true;
+                else
+                    timer3.Enabled = false;
+            }
+        }
+
+        private void Timer4_Tick(object sender, EventArgs e)
+        {
+            IntPtr hWnd = FindWindow(null, "Euro Truck Simulator 2 Multiplayer");
+
+            if(hWnd == null)
+            {
+                label5.Text = "ETS2 не запущен.";
+                label5.ForeColor = System.Drawing.Color.FromArgb(0x00ff8c9f);
+                launched = false;
+            }
             else
-                timer3.Enabled = false;
+            {
+                label5.Text = "ETS2 запущен.";
+                label5.ForeColor = System.Drawing.Color.FromArgb(0x0092fc8b);
+                launched = true;
+            }
         }
     }
 }
